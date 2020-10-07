@@ -12,12 +12,14 @@
   npm i 
   cd ../client
   npm i
+  cd ../
 ```
 
 ## Then go to the back folder and type
 
 ### This command will start the back-end and front-end
 ```
+cd ./back
 npm run start
 ```
 
