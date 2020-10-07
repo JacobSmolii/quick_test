@@ -1,19 +1,43 @@
 import React from 'react'
 import './Login.css'
 import { useState } from 'react'
+import axios from 'axios'
 
 function Login() {
-	const [name, setName] = useState('')
-	const [password, setPassword] = useState('')
+	const [input, setInput] = useState({
+		name: '',
+		password: ''
+	})
+
+	const changeHandler = (event) => {
+		setInput({ ...input, [event.target.name]: event.target.value })
+	}
 
 	const signIn = e => {
-		e.preventDefaul();
-
+		e.preventDefault();
+		console.log(input);
+		axios.post('http://localhost:5000/api/login/', input)
+			.then(response => {
+				console.log(response);
+				localStorage.setItem('token', response.data.token)
+				window.location = '/';
+			})
+			.catch(err => console.log(err))
 	}
 
 	const register = e => {
-		e.preventDefaul();
+		console.log(input);
+		e.preventDefault();
 
+		axios.post('http://localhost:5000/api/register/', input)
+			.then(response => {
+				alert("Account has been created, please Sign In")
+				window.location = '/';
+				// console.log('wow', response);
+			})
+			.catch(err => {
+				console.log('login', err);
+			})
 	}
 
 
@@ -25,15 +49,17 @@ function Login() {
 					<h5>Name</h5>
 					<input
 						type="text"
-						value={name}
-						onChange={e => setName(e.target.value)}
+						name='name'
+						value={input.name}
+						onChange={changeHandler}
 					/>
 
 					<h5>Password</h5>
 					<input
 						type="password"
-						value={password}
-						onChange={e => setPassword(e.target.value)}
+						name="password"
+						value={input.password}
+						onChange={changeHandler}
 					/>
 					<button onClick={signIn} type="submit" className="login_signInButton">Sign In</button>
 				</form>
